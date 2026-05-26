@@ -34,16 +34,14 @@ public class CharacterController {
     // 🔧 TODO: Obtener personaje por ID
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDTO getCharacterById() {
-        // Usar characterService.findById(id)
-        throw new UnsupportedOperationException("¡Implementa este endpoint!");
+    public CharacterDTO getCharacterById(@PathVariable Long id) {
+        return characterService.findById(id);
     }
 
     // 🔧 TODO: Cambiar estado de Alive a Dead
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDTO updateCharacterStatus() {
-        // Usar characterService.updateStatusToDead(id)
-        throw new UnsupportedOperationException("¡Implementa este endpoint!");
+    public CharacterDTO updateCharacterStatus(@PathVariable Long id) {
+        return characterService.updateStatusToDead(id);
     }
 }

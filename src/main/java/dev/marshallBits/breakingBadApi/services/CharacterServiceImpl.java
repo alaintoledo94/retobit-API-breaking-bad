@@ -3,11 +3,16 @@ package dev.marshallBits.breakingBadApi.services;
 import dev.marshallBits.breakingBadApi.dto.CharacterDTO;
 import dev.marshallBits.breakingBadApi.dto.CreateCharacterDTO;
 import dev.marshallBits.breakingBadApi.models.Character;
+import dev.marshallBits.breakingBadApi.models.CharacterStatus;
 import dev.marshallBits.breakingBadApi.repositories.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,15 +39,25 @@ public class CharacterServiceImpl implements CharacterService {
     // TODO: Obtener personaje por ID
     @Override
     public CharacterDTO findById(Long id) {
-        // PISTA: Usar characterRepository.findById(id)
-        throw new UnsupportedOperationException("¡Implementa este método!");
+        Optional<Character> optionalCharacter = characterRepository.findById(id);
+        if (optionalCharacter.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recurso no encontrado");
+        }
+        return convertToDTO(optionalCharacter.get());
     }
 
     // TODO: Cambiar estado de Alive a Dead
     @Override
     public CharacterDTO updateStatusToDead(Long id) {
-        // PISTA: Buscar personaje por ID, cambiar estado a DEAD, guardar cambios
-        throw new UnsupportedOperationException("¡Implementa este método!");
+        Optional<Character> optionalCharacter = characterRepository.findById(id);
+        if (optionalCharacter.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recurso no encontrado");
+        }
+        Character character = optionalCharacter.get();
+
+        character.setStatus(CharacterStatus.DEAD);
+        characterRepository.save(character);
+        return convertToDTO(character);
     }
 
     private CharacterDTO convertToDTO(Character character) {
